@@ -169,16 +169,40 @@ const GameRoom: React.FC = () => {
             initiator: !incomingSignal,
             trickle: false,
             stream,
+            config: {
+                iceServers: [
+                    { urls: 'stun:stun.l.google.com:19302' },
+                    { urls: 'stun:global.stun.twilio.com:3478' }
+                ]
+            }
         });
 
         peer.on('signal', signal => {
             socket?.emit('voice:signal', { targetId: userSocketId, signal });
         });
 
+        peer.on('connect', () => {
+            console.log(`Connected to peer ${userSocketId}`);
+        });
+
         peer.on('stream', remoteStream => {
+            console.log(`Received stream from ${userSocketId}`);
             const audio = document.createElement('audio');
             audio.srcObject = remoteStream;
-            audio.play();
+            audio.autoplay = true;
+            audio.style.display = 'none'; // Hide it
+            document.body.appendChild(audio); // Attach to DOM
+
+            // Cleanup on peer destroy? 
+            // We rely on peer.destroy() to stop tracks, but element might remain.
+            // Ideally we track these elements.
+            peer.on('close', () => {
+                audio.remove();
+            });
+        });
+
+        peer.on('error', (err) => {
+            console.error('Peer Error:', err);
         });
 
         if (incomingSignal) {
