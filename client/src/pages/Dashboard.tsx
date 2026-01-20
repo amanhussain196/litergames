@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Lobby from './Lobby';
 import GameRoom from './GameRoom'; // We'll create this

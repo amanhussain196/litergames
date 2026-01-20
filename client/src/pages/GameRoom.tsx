@@ -95,7 +95,7 @@ const GameRoom: React.FC = () => {
                 item.peer.signal(data.signal);
             } else {
                 if (userStream.current) {
-                    const peer = createPeer(data.socketId, data.socketId, data.signal, userStream.current);
+                    const peer = createPeer(data.socketId, data.signal, userStream.current);
                     peersRef.current.push({ peerId: data.socketId, peer });
                 }
             }
@@ -137,7 +137,7 @@ const GameRoom: React.FC = () => {
 
             players.forEach(p => {
                 if (p.id !== user?._id && p.socketId) {
-                    const peer = createPeer(p.socketId, p.socketId, null, stream);
+                    const peer = createPeer(p.socketId, null, stream);
                     peersRef.current.push({ peerId: p.socketId, peer });
                 }
             });
@@ -164,7 +164,7 @@ const GameRoom: React.FC = () => {
         else startVoice();
     };
 
-    const createPeer = (userSocketId: string, callerId: string, incomingSignal: any, stream: MediaStream) => {
+    const createPeer = (userSocketId: string, incomingSignal: any, stream: MediaStream) => {
         const peer = new SimplePeer({
             initiator: !incomingSignal,
             trickle: false,
